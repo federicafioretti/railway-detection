@@ -1,6 +1,6 @@
 Railway detection
 =============
-The railway analysis is performed by this program with the following tasks:
+The railway analysis is performed by this program addressing the following tasks:
 * Detection of the turn markings and kilometer signs (Italian Railway) thanks to the **HAAR
 cascade classifiers** previously trained using OpenCV.
 * Rail lines detection and tracking using **HoughLines** together with an iterative 
@@ -8,9 +8,8 @@ cascade classifiers** previously trained using OpenCV.
 * *Focus Of Expansion* coordinates determined by computing the intersection between
  the straight line approximation of the rails. Moreover the optical flow within the 
  bounding box enclosing the detected turn markings is assessed to the same aim.
-* Thanks to the *Focus Of Expansion* tracking, it is possible to filter possible wrongly
-matched keypoints out, evaluating their optical flow direction, displayed in white for 
-the complete scenario.
+* Wrongly matched keypoints filtering, thanks to the *Focus Of Expansion* tracking, evaluating their optical
+ flow direction, displayed in white for the complete scenario.
 
 ![Alt Text](https://raw.githubusercontent.com/federicafioretti/railway-detection/master/image-readme/execution.png)
 
@@ -71,8 +70,8 @@ for each rail, the first template is extracted according to the position guessed
 A weighted correlation analysis is done between the template and the upper stripe of image.
 
     xcorr = cv2.matchTemplate(row[0:self.h, startx:endx], 
-                                                      tmpl, 
-                                                      method=cv2.TM_CCOEFF_NORMED)
+                              tmpl, 
+                              method=cv2.TM_CCOEFF_NORMED)
 
     a = 0.001*(pos*2+1) # set Lorentzian shape
     xcorrW = np.zeros_like(xcorr)
@@ -103,15 +102,15 @@ The current frame of the video is analyzed to look for the rails profile, by upd
 loop = 1
 while loop < 27:
     xl, yl, Ml = railL.find_next(matchImage, 
-                                            loop - 1, 
-                                            Ml[0], 
-                                            plotres=watch_xcorr,
-                                            weights_on=weighted_version)
+                                loop - 1, 
+                                Ml[0], 
+                                plotres=watch_xcorr,
+                                weights_on=weighted_version)
     xr, yr, Mr = railR.find_next(matchImage, 
-                                            loop - 1, 
-                                            Mr[0], 
-                                            plotres=watch_xcorr,
-                                            weights_on=weighted_version)
+                                loop - 1, 
+                                Mr[0], 
+                                plotres=watch_xcorr,
+                                weights_on=weighted_version)
     railL.push((xl, yl))
     railR.push((xr, yr))
     railL.mark(frame, loop)
