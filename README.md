@@ -12,6 +12,8 @@ cascade classifiers** previously trained using OpenCV.
 matched keypoints out, evaluating their optical flow direction, displayed in white for 
 the complete scenario.
 
+![Alt Text](https://imgur.com/YJZ6M5W)
+
 The extraction of the portion of image occupied by the rails is handled by the Template Matching algorithm.\
 The *Railway Extraction* algorithm process each frame of the video, starting with the extraction of the rail lines. \
 In order to make the structure of the environment sufficiently visible, a proper elaboration is needed to filter unwanted
@@ -45,7 +47,7 @@ In order to extract only the lines of interest, several conditions have been def
 Transform, given as result of the OpenCV HoughLines step. 
 
 The patch containing the rails in the lower image has been **flipped** to compute the
-expected the guess for x coordinate min_val to extract the first template containing a rail 
+expected the guess for x coordinate `min_val` to extract the first template containing a rail 
 element within the next frame to be processed as:
 
 min_val = ρ * cos (θ) + full_img_scale
@@ -62,12 +64,26 @@ def nearest_line
         min_delta = abs(rho / np.cos(theta) + start_cols - expt_start)
         min_val = rho / np.cos(theta) + start_cols
     return min_delta, min_val
-
 ```
 
 The identification of the lower part of the imaged rails allows for a good initialization of the template matching phase: 
 for each rail, the first template is extracted according to the position guessed by the *Railway lines extraction*. 
-A correlation analysis is done between the template and the upper stripe of image.
+A weighted correlation analysis is done between the template and the upper stripe of image.
+
+    xcorr = cv2.matchTemplate(row[0:self.h, startx:endx], 
+                                                      tmpl, 
+                                                      method=cv2.TM_CCOEFF_NORMED)
+
+    a = 0.001*(pos*2+1) # set Lorentzian shape
+    xcorrW = np.zeros_like(xcorr)
+    L = []
+    val = []
+    val.extend(range(0, np.size(xcorr[0])))
+
+    for i in range(0, np.size(xcorr,1)):
+        L.append(1/(1 + a*pow(val[i] - MAX, 2)))
+        xcorrW[0][i] = L[i]*xcorr[0][i]
+
 
 Naming:
 * w_F, h_F the frame width and height
@@ -78,7 +94,11 @@ Naming:
 * ulC_I the upper left corner coordinates of the test image
 * maxcorrX the x-coordinate of the point within the test image having the highest value of correlation with the template.
 
+ulC_T = (maxcorrX, ulC_T_y - h_T) \
+ulC_I = (maxcorrX - w_T, ulC_T_y - 2h_T)
+
 The current frame of the video is analyzed to look for the rails profile, by updating the upper left corner of both the template and test image for a specific number of iterations (27):
+
 ```
 loop = 1
 while loop < 27:
@@ -96,12 +116,7 @@ while loop < 27:
     railR.push((xr, yr))
     railL.mark(frame, loop)
     railR.mark(frame, loop)
-
 ```
-The search for the sequence of templates fitting one of the rails also considers the alignment of the few previous ones, in order to approximate at best the curvature of the rails.
-
-The Focus of Expansion position within the image is ideally individuated by the optical flow. In a railway scenario the environment may not be sufficiently structured and textured. 
-
 The infrastructure has few geometric elements and sometimes high presence of vegetation. In these cases wrong feature matching may occur, with the risk of having a set of unreliable tracks of points across subsequent frames. Relying on the detection of the rails and signs extracted within an image, two separate estimates of the FoE coordinates can be obtained as:
 
 * the intersection of the lines approximating the lower part of the rails,
