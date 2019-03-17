@@ -2,11 +2,11 @@ import cv2
 import numpy as np
 from lines import lines2intersection_hor
 
-def tmp_match_rail_lines(w, frame, matchImage, weighted_version, watch_xcorr, MAXl, binarioL, binarioR, left_edges, left_xseq, left_yseq, right_edges, right_xseq, right_yseq):
+def tmp_match_rail_lines(w, frame, matchImage, weighted_version, watch_xcorr, MAXl, railL, railR, left_edges, left_xseq, left_yseq, right_edges, right_xseq, right_yseq):
 
     # draw first template
-    binarioL.mark(frame, 0)
-    binarioR.mark(frame, 0)
+    railL.mark(frame, 0)
+    railR.mark(frame, 0)
 
     # init expected coordinates for template lower left corner, where to look for the upper template containing
     # a left rail element
@@ -30,14 +30,20 @@ def tmp_match_rail_lines(w, frame, matchImage, weighted_version, watch_xcorr, MA
     loop = 1
 
     while loop < 27:
-        xl, yl, Ml = binarioL.find_next(matchImage, loop - 1, Ml[0], plotres=watch_xcorr,
-                                        weights_on=weighted_version)
-        xr, yr, Mr = binarioR.find_next(matchImage, loop - 1, Mr[0], plotres=watch_xcorr,
-                                        weights_on=weighted_version)
-        binarioL.push((xl, yl))
-        binarioR.push((xr, yr))
-        binarioL.mark(frame, loop)
-        binarioR.mark(frame, loop)
+        xl, yl, Ml = railL.find_next(matchImage,
+                                     loop - 1,
+                                     Ml[0],
+                                     plotres=watch_xcorr,
+                                     weights_on=weighted_version)
+        xr, yr, Mr = railR.find_next(matchImage,
+                                     loop - 1,
+                                     Mr[0],
+                                     plotres=watch_xcorr,
+                                     weights_on=weighted_version)
+        railL.push((xl, yl))
+        railR.push((xr, yr))
+        railL.mark(frame, loop)
+        railR.mark(frame, loop)
 
         # line fitting the rails between the 1st and the 5th templates
         if loop == 1 or loop == 5:
