@@ -127,4 +127,4 @@ bounding box of the turn markings, considering the fixed horizon y coordinate (g
 camera calibration, i.e. the principal point coordinates)
 
 When both the estimates computed in this fashion are available, the FoE position is the mean value of the coordinates.
-The displacement of the FoE along the horizon line can be registered and exploited to filter wrongly matched feature and may provide important motion cues. \
+The displacement of the FoE along the horizon line can be registered and exploited to filter wrongly matched feature and may provide important motion cues.
