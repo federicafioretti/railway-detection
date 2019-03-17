@@ -12,7 +12,7 @@ cascade classifiers** previously trained using OpenCV.
 matched keypoints out, evaluating their optical flow direction, displayed in white for 
 the complete scenario.
 
-![Alt Text](https://i.imgur.com/YJZ6M5W_d.jpg?maxwidth=1920&shape=thumb&fidelity=high)
+![Alt Text](https://raw.githubusercontent.com/federicafioretti/railway-detection/master/images-readme/execution.png)
 
 The extraction of the portion of image occupied by the rails is handled by the Template Matching algorithm.\
 The *Railway Extraction* algorithm process each frame of the video, starting with the extraction of the rail lines. \
