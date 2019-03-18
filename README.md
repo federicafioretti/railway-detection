@@ -1,6 +1,6 @@
 Railway detection
 =============
-The railway analysis is performed by this program addressing the following tasks:
+The railway analysis performed by this program (in Python 2.7, using OpenCV 3.3) addresses the following tasks:
 * Detection of the turn markings and kilometer signs (Italian Railway) thanks to the **HAAR
 cascade classifiers** previously trained using OpenCV.
 * Rail lines detection and tracking using **HoughLines** together with an iterative 
