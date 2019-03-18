@@ -46,7 +46,7 @@ cr_rail = 14134.142857142857
 
 def main():
     parser = argparse.ArgumentParser(description='Process some integers.')
-    parser.add_argument('-I',"--input",help="input file video",default="/home/federica/PycharmProjects/RegistrazioneVideoTrenoVolterra.mp4")
+    parser.add_argument('-I',"--input",help="input file video",default="RegistrazioneVideoTrenoVolterra.mp4")
     parser.add_argument('-O',"--output",help="input file JSON",default="output.json")
     parser.add_argument('--cascadeTurn',help="XML of cascade",default='cascadePOLES.xml')
     parser.add_argument('--cascadeKm', help="XML of cascade", default='cascadeKM.xml')
